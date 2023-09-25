@@ -21,5 +21,7 @@ mix run --no-halt
 
 # For mirrord logs to show the trace error
 MIX_DEBUG=1 MIRRORD_PROGRESS_MODE=off RUST_LOG=mirrord=trace MIRRORD_AGENT_TTL=120 RUST_BACKTRACE=1 mirrord exec -- mix run --no-halt
-``````
 
+# Will start an http server on port 8080 that will respond hello world to all endpoints
+# You can hit it with curl http://localhost:8080/hello
+```
