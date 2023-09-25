@@ -1,21 +1,25 @@
 # MirrordDemo
 
-**TODO: Add description**
+Demo app for debugging a few mirrord issues I ran into. The app is generic enough
+to run on most Elixir versions, but you'll see different errors depending if you
+run via an `asdf` shim or not.
 
-## Installation
+## Running the App
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `mirrord_demo` to your list of dependencies in `mix.exs`:
+```bash
+# use asdf shim to reproduce broken pipe on shared FDs issue: https://github.com/metalbear-co/mirrord/issues/1966
+asdf install
+# use non-asdf version to reproduce errors around path
+# I use brew to install elixir but ymmv
+brew install elixir
+export PATH=$(brew --prefix)/bin:$PATH # to put it before the asdf shim
 
-```elixir
-def deps do
-  [
-    {:mirrord_demo, "~> 0.1.0"}
-  ]
-end
-```
+mix deps.get
+mix deps.compile
+mix compile
+mix run --no-halt
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/mirrord_demo>.
+# For mirrord logs to show the trace error
+MIX_DEBUG=1 MIRRORD_PROGRESS_MODE=off RUST_LOG=mirrord=trace MIRRORD_AGENT_TTL=120 RUST_BACKTRACE=1 mirrord exec -- mix run --no-halt
+``````
 
