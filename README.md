@@ -15,10 +15,11 @@ mix run --no-halt
 # Run using mirrord
 MIX_DEBUG=1 MIRRORD_PROGRESS_MODE=off RUST_LOG=mirrord=trace MIRRORD_AGENT_TTL=120 RUST_BACKTRACE=1 mirrord exec -- mix run --no-halt
 
+# To validate the DNS issues to kube internal pods, I've been running nginx
+kubectl run nginx --image=nginx --restart=Never
+
 # Will start an http server on port 8080
 # Making a call to `/external` will make a GET requeset to https://example.com
-# when running under mirrord this will fail with:
-## erl_child_setup: failed with error 9 on line 208
-# before panicking
-# All other endpoints return Hello world as plain text
+# Making a call to `/internal` will make a GET request to `http://nginx`
+# All other calls return `Hello World` 200
 ```

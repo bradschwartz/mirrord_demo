@@ -6,29 +6,40 @@ defmodule Mirrord.SimplePlugRest do
   use Tesla
   require Logger
 
+  @spec init(any()) :: any()
   def init(options) do
     options
   end
 
-  @doc """
-  Simple route that returns a string
-  """
   @spec call(Plug.Conn.t(), any) :: Plug.Conn.t()
   def call(conn, _opts) do
-    if conn.request_path == "/external" do
-      Logger.info("Making external request")
-      {:ok, response} = Tesla.get("https://example.com")
+    case conn.request_path do
+      "/external" ->
+        Logger.info("Making external request")
+        {:ok, response} = Tesla.get("https://example.com")
 
-      Logger.info("Response: #{inspect(response)}")
+        Logger.info("Response: #{inspect(response)}")
 
-      conn
-      |> put_resp_content_type("text/plain")
-      |> send_resp(200, "Call to #{response.url} returned #{response.status}")
-      |> halt()
-    else
-      conn
-      |> put_resp_content_type("text/plain")
-      |> send_resp(200, "Hello world")
+        conn
+        |> put_resp_content_type("text/plain")
+        |> send_resp(200, "Call to #{response.url} returned #{response.status}")
+        |> halt()
+
+      "/internal" ->
+        Logger.info("Making internal (pod) request")
+        {:ok, response} = Tesla.get("http://nginx")
+
+        Logger.info("Response: #{inspect(response)}")
+
+        conn
+        |> put_resp_content_type("text/plain")
+        |> send_resp(200, "Call to #{response.url} returned #{response.status}")
+        |> halt()
+
+      _ ->
+        conn
+        |> put_resp_content_type("text/plain")
+        |> send_resp(200, "Hello world")
     end
   rescue
     e ->
