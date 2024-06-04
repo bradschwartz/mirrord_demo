@@ -22,6 +22,7 @@ defmodule MirrordDemo.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:bcrypt_elixir, "~> 3.1.0"},
       {:cowboy, "~> 2.0"},
       {:plug_cowboy, "~> 2.1"},
       {:tesla, "~> 1.7"}
